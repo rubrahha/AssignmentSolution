@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html><head><title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<div style="page-break-before:always; page-break-after:always"><div><p><b>Water Tank Problem &#8211; Assignment Submission <br/></b></p>
+<p><b>Problem Statement <br/></b></p>
+<p><b>Given an array representing the heights of blocks (e.g., `[0,4,0,0,te the total units of water <br/>trapped between the blocks after rain. In addition to the logic, create a Web Application <br/>(Frontend Solution) using Vanilla JavaScript and HTML/CSS to visualize the blocks and trapped <br/>water using SVG (preferred). <br/></b></p>
+<p><b>1. Approach &amp; Logic <br/></b></p>
+<p><b>1. For each block, the water trapped at that position is determined by the minimum of <br/>the tallest block on its left and right, minus the block&#8217;s own height. <br/></b></p>
+<p><b>2. The total trapped water is the sum for all such positions. <br/></b></p>
+<p><b>2. JavaScript Function to Calculate Trapped Water <br/></b></p>
+<p><b>javascript <br/></b></p>
+<p><b>function calculateWater(blocks) { <br/></b></p>
+<p><b>    let n = blocks.length; <br/></b></p>
+<p><b>    let leftMax = Array(n).fill(0); <br/></b></p>
+<p><b>    let rightMax = Array(n).fill(0); <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>    leftMax[0] = blocks[0]; <br/></b></p>
+<p><b>    for (let i = 1; i &lt; n; i++) { <br/></b></p>
+<p><b>        leftMax[i] = Math.max(blocks[i], leftMax[i - 1]); <br/></b></p>
+<p><b>    } <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>    rightMax[n - 1] = blocks[n - 1]; <br/></b></p>
+<p><b>    for (let i = n - 2; i &gt;= 0; i--) { <br/></b></p>
+<p><b>        rightMax[i] = Math.max(blocks[i], rightMax[i + 1]); <br/></b></p>
+<p><b>    } <br/></b></p>
+<p><b> </b></p>
+
+</div></div>
+<div style="page-break-before:always; page-break-after:always"><div><p><b>    let water = 0; <br/></b></p>
+<p><b>    let waterAtBlocks = Array(n).fill(0); <br/></b></p>
+<p><b>    for (let i = 0; i &lt; n; i++) { <br/></b></p>
+<p><b>        let trapped = Math.min(leftMax[i], rightMax[i]) - blocks[i]; <br/></b></p>
+<p><b>        if (trapped &gt; 0) { <br/></b></p>
+<p><b>            water += trapped; <br/></b></p>
+<p><b>            waterAtBlocks[i] = trapped; <br/></b></p>
+<p><b>        } <br/></b></p>
+<p><b>    } <br/></b></p>
+<p><b>    return {total: water, waterAtBlocks}; <br/></b></p>
+<p><b>} <br/></b></p>
+<p><b>3. Complete Web App Code (HTML + JS + SVG) <br/></b></p>
+<p><b>You may copy all this into a file named index.html and open it. <br/></b></p>
+<p><b>xml <br/></b></p>
+<p><b>&lt;!DOCTYPE html&gt; <br/></b></p>
+<p><b>&lt;html lang=&quot;en&quot;&gt; <br/></b></p>
+<p><b>&lt;head&gt; <br/></b></p>
+<p><b>    &lt;meta charset=&quot;UTF-8&quot;&gt; <br/></b></p>
+<p><b>    &lt;title&gt;Water Tank Problem Visualization&lt;/title&gt; <br/></b></p>
+<p><b>    &lt;style&gt; <br/></b></p>
+<p><b>        body { font-family: Arial, sans-serif; margin: 30px; } <br/></b></p>
+<p><b>        .input-box { margin-bottom: 20px; } <br/></b></p>
+<p><b>        #output { margin-top: 16px; font-size: 18px; } <br/></b></p>
+<p><b>        svg { background: #f3f3f3; } <br/></b></p>
+<p><b>    &lt;/style&gt; <br/></b></p>
+<p><b>&lt;/head&gt; </b></p>
+
+</div></div>
+<div style="page-break-before:always; page-break-after:always"><div><p><b>&lt;body&gt; <br/></b></p>
+<p><b>    &lt;h2&gt;Water Tank Problem Visualizer&lt;/h2&gt; <br/></b></p>
+<p><b>    &lt;div class=&quot;input-box&quot;&gt; <br/></b></p>
+<p><b>        &lt;label&gt;Enter blocks array (comma separated): &lt;/label&gt; <br/></b></p>
+<p><b>        &lt;input type=&quot;text&quot; id=&quot;blocksInput&quot; value=&quot;0,4,0,0,0,6,0,6,4,0&quot; size=&quot;40&quot;&gt; <br/></b></p>
+<p><b>        &lt;button onclick=&quot;solve()&quot;&gt;Visualize&lt;/button&gt; <br/></b></p>
+<p><b>    &lt;/div&gt; <br/></b></p>
+<p><b>    &lt;div id=&quot;output&quot;&gt;&lt;/div&gt; <br/></b></p>
+<p><b>    &lt;svg id=&quot;tankSVG&quot; width=&quot;600&quot; height=&quot;220&quot;&gt;&lt;/svg&gt; <br/></b></p>
+<p><b>    &lt;script&gt; <br/></b></p>
+<p><b>        function calculateWater(blocks) { <br/></b></p>
+<p><b>            let n = blocks.length; <br/></b></p>
+<p><b>            let leftMax = Array(n).fill(0); <br/></b></p>
+<p><b>            let rightMax = Array(n).fill(0); <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>            leftMax[0] = blocks[0]; <br/></b></p>
+<p><b>            for (let i = 1; i &lt; n; i++) <br/></b></p>
+<p><b>                leftMax[i] = Math.max(blocks[i], leftMax[i-1]); <br/></b></p>
+<p><b>            rightMax[n-1] = blocks[n-1]; <br/></b></p>
+<p><b>            for (let i = n-2; i &gt;= 0; i--) <br/></b></p>
+<p><b>                rightMax[i] = Math.max(blocks[i], rightMax[i+1]); <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>            let water = 0; <br/></b></p>
+<p><b>            let waterAtBlocks = Array(n).fill(0); <br/></b></p>
+<p><b>            for (let i = 0; i &lt; n; i++) { <br/></b></p>
+<p><b>                let trapped = Math.min(leftMax[i], rightMax[i]) - blocks[i]; </b></p>
+
+</div></div>
+<div style="page-break-before:always; page-break-after:always"><div><p><b>                if (trapped &gt; 0) { <br/></b></p>
+<p><b>                    water += trapped; <br/></b></p>
+<p><b>                    waterAtBlocks[i] = trapped; <br/></b></p>
+<p><b>                } <br/></b></p>
+<p><b>            } <br/></b></p>
+<p><b>            return { total: water, waterAtBlocks }; <br/></b></p>
+<p><b>        } <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>        function solve() { <br/></b></p>
+<p><b>            let arr = document.getElementById(&quot;blocksInput&quot;).value.split(',').map(Number); <br/></b></p>
+<p><b>            let { total, waterAtBlocks } = calculateWater(arr); <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>            document.getElementById(&quot;output&quot;).innerText = total + &quot; Units&quot;; <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>            let SVG = document.getElementById(&quot;tankSVG&quot;); <br/></b></p>
+<p><b>            SVG.innerHTML = &quot;&quot;; <br/></b></p>
+<p><b>            let maxHeight = Math.max(...arr) + Math.max(...waterAtBlocks, 0); <br/></b></p>
+<p><b>            let blockWidth = 40, gap = 5, base = 200, heightUnit = 25; <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>            // Draw bars <br/></b></p>
+<p><b>            for (let i = 0; i &lt; arr.length; i++) { <br/></b></p>
+<p><b>                let h = arr[i] * heightUnit; <br/></b></p>
+<p><b>                // Block (grey) <br/></b></p>
+<p><b>                SVG.innerHTML += ` <br/></b></p>
+<p><b>                    &lt;rect x=&quot;${i*(blockWidth+gap)}&quot; y=&quot;${base-h}&quot; width=&quot;${blockWidth}&quot; <br/>height=&quot;${h}&quot; fill=&quot;#666&quot; /&gt; </b></p>
+
+</div></div>
+<div style="page-break-before:always; page-break-after:always"><div><p><b>                `; <br/></b></p>
+<p><b>                // Water (blue, on top) <br/></b></p>
+<p><b>                if (waterAtBlocks[i] &gt; 0) { <br/></b></p>
+<p><b>                    let wh = waterAtBlocks[i] * heightUnit; <br/></b></p>
+<p><b>                    SVG.innerHTML += ` <br/></b></p>
+<p><b>                        &lt;rect x=&quot;${i*(blockWidth+gap)}&quot; y=&quot;${base-h-wh}&quot; width=&quot;${blockWidth}&quot; <br/>height=&quot;${wh}&quot; fill=&quot;#42a5f5&quot; opacity=&quot;0.8&quot;/&gt; <br/></b></p>
+<p><b>                    `; <br/></b></p>
+<p><b>                } <br/></b></p>
+<p><b>                // Numbers on top <br/></b></p>
+<p><b>                SVG.innerHTML += ` <br/></b></p>
+<p><b>                    &lt;text x=&quot;${i*(blockWidth+gap) + blockWidth/2}&quot; y=&quot;${base-h-8}&quot; font-size=&quot;12&quot; <br/>fill=&quot;#333&quot; text-anchor=&quot;middle&quot;&gt;${arr[i]}&lt;/text&gt; <br/></b></p>
+<p><b>                `; <br/></b></p>
+<p><b>            } <br/></b></p>
+<p><b>            // Draw base line <br/></b></p>
+<p><b>            SVG.innerHTML += `&lt;line x1=&quot;0&quot; y1=&quot;${base}&quot; x2=&quot;${arr.length*(blockWidth+gap)}&quot; <br/>y2=&quot;${base}&quot; stroke=&quot;#000&quot; /&gt;`; <br/></b></p>
+<p><b>        } <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>        // Initial render <br/></b></p>
+<p><b>        window.onload = solve; <br/></b></p>
+<p><b>    &lt;/script&gt; <br/></b></p>
+<p><b>&lt;/body&gt; <br/></b></p>
+<p><b>&lt;/html&gt; <br/></b></p>
+<p><b> <br/></b></p>
+<p><b>4. Example &#8211; As Shown in the PDF </b></p>
+
+</div></div>
+<div style="page-break-before:always; page-break-after:always"><div><p><b>Input array: <br/>[0,4,0,0,0,6,0,6,4,8 Units <br/></b></p>
+<p><b>The SVG bar chart visualizes the blocks and fills in blue the trapped water above each, <br/>matching the example in the PDF. <br/></b></p>
+<p><b>5. Repository &amp; Usage Instructions <br/></b></p>
+<p>&#8226; Save all the above code in a file (say, index.html), open in your browser. <br/></p>
+<p>&#8226; <b>Change the block heights as needed, or demo the provided array. <br/></b></p>
+<p>&#8226; The SVG will illustrate the blocks and trapped water interactively! <br/></p>
+<p><b>This fulfills your assignment's requirements: it calculates units using correct logic, provides a <br/>JavaScript function and a complete web app, and uses SVG for the preferred visualization. </b></p>
+
+</div></div>
+</body></html>

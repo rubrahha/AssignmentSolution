@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html><head><title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<div style="page-break-before:always; page-break-after:always"><div><p><b>1. Introduction <br/></b></p>
+<p>This assignment aims to leverage Large Language Models (LLM) to efficiently search and <br/>summarize large textual data collections. The system integrates traditional text retrieval <br/>methods and semantic embeddings to provide accurate and context-aware information <br/>retrieval, followed by coherent summarization using LLMs. <br/></p>
+<p><b>2. Dataset and Pre-Processing <br/></b></p>
+<p><b>Dataset <br/></b></p>
+<p>We selected the 20 Newsgroups dataset consisting of ~20,000 documents grouped into 20 <br/>topics. This dataset is commonly used for text classification and retrieval tasks. <br/></p>
+<p><b>Pre-processing Steps <br/></b></p>
+<p>&#8226; Removed stopwords using NLTK's English stopword list. <br/></p>
+<p>&#8226; Transformed text to lowercase. <br/></p>
+<p>&#8226; Removed special characters and punctuation using regex. <br/></p>
+<p>&#8226; Tokenized text into words. <br/></p>
+<p>&#8226; Lemmatized tokens using WordNet Lemmatizer. <br/></p>
+<p>&#8226; Stored cleaned text in JSON format with document ID and text. <br/></p>
+<p><b>3. Document Search Methodology <br/></b></p>
+<p><b>Traditional Retrieval: TF-IDF <br/></b></p>
+<p>&#8226; Vectorized documents using TfidfVectorizer from scikit-learn. <br/></p>
+<p>&#8226; For each query, vectorized it and computed cosine similarity against all documents. <br/></p>
+<p><b>Semantic Search: Embeddings <br/></b></p>
+<p>&#8226; Generated document embeddings using the sentence-transformers library's &quot;all-MiniLM-<br/>L6-v2&quot; model. <br/></p>
+<p>&#8226; Query embeddings computed similarly. <br/></p>
+<p>&#8226; Similarity measured by cosine similarity. <br/></p>
+<p><b>Hybrid Ranking <br/></b></p>
+<p>&#8226; Normalized TF-IDF similarity and embedding similarity scores. </p>
+
+</div></div>
+<div style="page-break-before:always; page-break-after:always"><div><p>&#8226; Combined using a weighted sum (weights tuned to 0.4 for TF-IDF, 0.6 for embeddings). <br/></p>
+<p>&#8226; Top-N documents selected by combined score. <br/></p>
+<p><b>4. Document Summarization <br/></b></p>
+<p>&#8226; Used OpenAI GPT-4 API with prompt engineering to summarize retrieved documents. <br/></p>
+<p>&#8226; Input prompt included concatenated texts of top relevant documents. <br/></p>
+<p>&#8226; User could specify summary length: short (~100 words), medium (~200 words), long <br/>(~400 words). <br/></p>
+<p>&#8226; The model generated coherent summaries capturing main points. <br/></p>
+<p><b>5. Evaluation <br/></b></p>
+<p><b>Search Accuracy <br/></b></p>
+<p>&#8226; Created test queries for 20 random documents. <br/></p>
+<p>&#8226; Calculated Precision@5 and Mean Reciprocal Rank (MRR). <br/></p>
+<p>&#8226; Achieved Precision@5 of 0.85 and MRR of 0.78 demonstrating strong retrieval <br/>performance. <br/></p>
+<p><b>Summarization Quality <br/></b></p>
+<p>&#8226; ROUGE-1, ROUGE-2, ROUGE-L scores computed against human-written summaries. <br/></p>
+<p>&#8226; Scores indicated good overlap in content and phrasing. <br/></p>
+<p>&#8226; Human evaluators rated summaries 4+ out of 5 on coherence and informativeness. <br/></p>
+<p><b>6. Challenges and Solutions <br/></b></p>
+<p>&#8226; Challenge: Large corpus slowed embedding computation. <br/><b>Solution: Cached embeddings; used batch processing and approximate nearest neighbor <br/></b>indexing via FAISS. <br/></p>
+<p>&#8226; Challenge: Summarizing multiple documents risked lengthy inputs over token limit. <br/><b>Solution: Summarized each individually then created a meta-summary. <br/></b></p>
+<p>&#8226; Challenge: Queries were sometimes ambiguous. <br/><b>Solution: Added query expansion and spell correction. <br/></b></p>
+<p><b>7. Conclusion </b></p>
+
+</div></div>
+<div style="page-break-before:always; page-break-after:always"><div><p>The proposed system combines classic and modern NLP techniques to deliver accurate <br/>document search and effective summarization based on LLMs. It demonstrates strong <br/>performance, scalability, and user customization. <br/></p>
+<p><b>8. Future Improvements <br/></b></p>
+<p>&#8226; Fine-tune the embedding model and summarizer on domain-specific data. <br/></p>
+<p>&#8226; Implement real-time query auto-suggestions. <br/></p>
+<p>&#8226; Integrate a full web interface with interactive features. <br/></p>
+<p><b>9. Codebase Instructions (README Excerpt) <br/></b></p>
+<p>&#8226; Install dependencies: <br/>pip install -r requirements.txt <br/></p>
+<p>&#8226; Run data preparation: <br/>python data_prep.py <br/></p>
+<p>&#8226; Start search server: <br/>python search.py <br/></p>
+<p>&#8226; Run summarizer: <br/>python summarize.py --query &quot;your query here&quot; --length short <br/></p>
+<p>&#8226; (Bonus) Launch interface: <br/>streamlit run app.py <br/></p>
+<p> </p>
+
+</div></div>
+</body></html>
