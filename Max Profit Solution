@@ -1,0 +1,64 @@
+Corrected Solution
+The issue was in how I was calculating earnings and finding all optimal combinations. Here's the fixed algorithm:
+python
+def calculate_earnings_sequence(t, p, c, n):
+    current_time = 0
+    earnings = 0
+    
+    # Calculate for T buildings (built sequentially)
+    for _ in range(t):
+        build_time = 5
+        earnings += 1500 * (n - (current_time + build_time))
+        current_time += build_time
+        
+    # Calculate for P buildings  
+    for _ in range(p):
+        build_time = 4
+        earnings += 1000 * (n - (current_time + build_time))
+        current_time += build_time
+        
+    # Calculate for C buildings
+    for _ in range(c):
+        build_time = 10
+        earnings += 3000 * (n - (current_time + build_time))
+        current_time += build_time
+        
+    return earnings
+
+def solve_max_profit(n):
+    max_earning = 0
+    best_combos = []
+    
+    max_t = n // 5
+    max_p = n // 4  
+    max_c = n // 10
+    
+    for t in range(max_t+1):
+        for p in range(max_p+1):
+            for c in range(max_c+1):
+                total_time = t*5 + p*4 + c*10
+                if total_time <= n:
+                    earning = calculate_earnings_sequence(t, p, c, n)
+                    if earning > max_earning:
+                        max_earning = earning
+                        best_combos = [{'T': t, 'P': p, 'C': c}]
+                    elif earning == max_earning:
+                        best_combos.append({'T': t, 'P': p, 'C': c})
+    
+    return max_earning, best_combos
+Solution for Input n = 49
+maxEarnings: 324000
+Optimal Combinations Found:
+1.	T: 8, P: 2, C: 0
+2.	T: 9, P: 0, C: 0
+3.	T: 9, P: 1, C: 0
+Verification
+For T: 9, P: 0, C: 0:
+•	9 Theatres built sequentially: 5+5+5+5+5+5+5+5+5 = 45 time units
+•	Earnings: Theatre 1 operates for (49-5)=44 units → $66,000
+•	Theatre 2 operates for (49-10)=39 units → $58,500
+•	... and so on
+•	Total: $324,000
+For T: 8, P: 2, C: 0:
+•	8 Theatres (40 time units) + 2 Pubs (8 time units) = 48 time units
+•	Total: $324,000
