@@ -1,141 +1,64 @@
-Max Profit Problem Solution
-
-Problem Recap:
-
-You can build Theatres (T), Pubs (P), or Commercial Parks (C) on a strip of land, one after another (no parallel builds). Each type takes a certain time to build and earns a fixed income per operational unit.
-
-Given n units of time, maximize total earnings by choosing the right combination. Property Details
-
-Building Type Build Time Earnings Theatre (T) 5 units $1500
-
-Pub (P) 4 units $1000 Commercial Park (C) 10 units $3000
-
-Note: Once a building is complete, it immediately starts earning for the remaining time.
-
-You can only build one at a time, and the land is infinite. Solution Methodology
-
-Dynamic Programming is used, since for each remaining time, the optimal choice depends on what we build next.
-
-Let dp[t] = maximum profit we can achieve if we have t units of time left.
-
-For each building:
-
-If time left ≥ build time, you can build it.
-
-Once built, it will run for (total_time - current_time - build_time) units, earning accordingly.
-
-Try all build options at each step.
-
-We not only need the total profit, but the exact mix (count) of each building. Code (Python, Ready-to-Use)
-
+Corrected Solution
+The issue was in how I was calculating earnings and finding all optimal combinations. Here's the fixed algorithm:
 python
+def calculate_earnings_sequence(t, p, c, n):
+    current_time = 0
+    earnings = 0
+    
+    # Calculate for T buildings (built sequentially)
+    for _ in range(t):
+        build_time = 5
+        earnings += 1500 * (n - (current_time + build_time))
+        current_time += build_time
+        
+    # Calculate for P buildings  
+    for _ in range(p):
+        build_time = 4
+        earnings += 1000 * (n - (current_time + build_time))
+        current_time += build_time
+        
+    # Calculate for C buildings
+    for _ in range(c):
+        build_time = 10
+        earnings += 3000 * (n - (current_time + build_time))
+        current_time += build_time
+        
+    return earnings
 
-def max_profit(total_time):
-
-# Building types: (name, build_time, earning_per_unit)
-buildings = [
-
-('T', 5, 1500),
-
-('P', 4, 1000),
-
-('C', 10, 3000)
-
-]
-
-
-
-memo = {}
-
-
-
-def dp(time_left): if time_left <= 0:
-
-return (0, [0, 0, 0]) # profit, [T, P, C]
-
-if time_left in memo:
-
-return memo[time_left] best_profit = 0
-
-best_counts = [0, 0, 0]
-
-for idx, (b, build_time, earning) in enumerate(buildings): if time_left >= build_time:
-
-# Build this, then continue with remaining time operational_time = time_left - build_time profit_now = earning * operational_time profit_next, counts_next = dp(operational_time) total_profit = profit_now + profit_next
-if total_profit > best_profit: best_profit = total_profit
-
-best_counts = counts_next.copy() best_counts[idx] += 1
-
-memo[time_left] = (best_profit, best_counts)
-
-return memo[time_left]
-
-
-
-profit, counts = dp(total_time)
-
-return profit, counts # total profit, [T, P, C]
-
-Test Cases Test Case 1
-
-Time Unit: 7 python
-
-profit, counts = max_profit(7) print(f"Profit: ${profit}")
-
-print(f"T: {counts[0]} P: {counts[1]} C: {counts[2]}") Output:
-
-text
-
-Profit: $3000 T: 1 P: 0 C: 0
-
-Test Case 2
-
-Time Unit: 8 text
-
-Profit: $4500 T: 1 P: 0 C: 0
-
-Test Case 3
-
-Time Unit: 13 text
-
-Profit: $16500 T: 2 P: 0 C: 0
-
-General Instructions for Use
-
-Call max_profit(n) with any value of n (time units).
-
-Output is the maximum possible profit and the optimal count for Theatres, Pubs, and Commercial Parks.
-
-Final Answer Template For a given time unit n:
-
-Use the provided Python code.
-
-Output the values as
-
-Earnings: $[profit]**
-
-T: [number of theatres] P: [number of pubs] C: [number of parks]
-
-These values match (and often improve on) the manual calculations shown in the test cases.
-
-Ready-Made Example Output Table Time Units Earnings T P C
-
-
-
-7
-
-$3000
-
-1 0 0
-
-8
-
-$4500
-
-1 0 0
-
-13
-
-$16500
-
-2 0 0
+def solve_max_profit(n):
+    max_earning = 0
+    best_combos = []
+    
+    max_t = n // 5
+    max_p = n // 4  
+    max_c = n // 10
+    
+    for t in range(max_t+1):
+        for p in range(max_p+1):
+            for c in range(max_c+1):
+                total_time = t*5 + p*4 + c*10
+                if total_time <= n:
+                    earning = calculate_earnings_sequence(t, p, c, n)
+                    if earning > max_earning:
+                        max_earning = earning
+                        best_combos = [{'T': t, 'P': p, 'C': c}]
+                    elif earning == max_earning:
+                        best_combos.append({'T': t, 'P': p, 'C': c})
+    
+    return max_earning, best_combos
+Solution for Input n = 49
+maxEarnings: 324000
+Optimal Combinations Found:
+1.	T: 8, P: 2, C: 0
+2.	T: 9, P: 0, C: 0
+3.	T: 9, P: 1, C: 0
+Verification
+For T: 9, P: 0, C: 0:
+•	9 Theatres built sequentially: 5+5+5+5+5+5+5+5+5 = 45 time units
+•	Earnings: Theatre 1 operates for (49-5)=44 units → $66,000
+•	Theatre 2 operates for (49-10)=39 units → $58,500
+•	... and so on
+•	Total: $324,000
+For T: 8, P: 2, C: 0:
+•	8 Theatres (40 time units) + 2 Pubs (8 time units) = 48 time units
+•	Total: $324,000
